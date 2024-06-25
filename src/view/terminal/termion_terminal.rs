@@ -192,25 +192,6 @@ impl Terminal for TermionTerminal {
         }
     }
 
-    fn clear(&self) {
-        // Because we're clearing styles below, we'll
-        // also need to bust the style/color cache.
-        if let Ok(mut guard) = self.current_style.lock() {
-            guard.take();
-        }
-        if let Ok(mut guard) = self.current_colors.lock() {
-            guard.take();
-        }
-
-        // It's important to reset the terminal styles prior to clearing the
-        // screen, otherwise the current background color will be used.
-        if let Ok(mut guard) = self.output.lock() {
-            if let Some(ref mut output) = *guard {
-                let _ = write!(output, "{}{}", style::Reset, termion::clear::All);
-            }
-        }
-    }
-
     fn present(&self) {
         if let Ok(mut output) = self.output.lock() {
             output.as_mut().map(|t| t.flush());
