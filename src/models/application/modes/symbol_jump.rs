@@ -40,7 +40,7 @@ impl Clone for Symbol {
     }
 
     fn clone_from(&mut self, source: &Self) {
-        self.token = source.token.clone();
+        self.token.clone_from(&source.token);
         self.position = source.position;
     }
 }
